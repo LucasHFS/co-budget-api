@@ -4,7 +4,7 @@ class Response
   attr_reader :record, :error
 
   def initialize(success: true, error: nil, record: nil)
-    @record    = record
+    @record = record
     @success = error.blank?
     @error = error
   end
