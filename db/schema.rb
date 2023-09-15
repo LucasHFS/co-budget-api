@@ -10,9 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_27_011822) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_08_233204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "budget_expenses", id: false, force: :cascade do |t|
+    t.bigint "budget_id"
+    t.bigint "expense_id"
+    t.index ["budget_id"], name: "index_budget_expenses_on_budget_id"
+    t.index ["expense_id"], name: "index_budget_expenses_on_expense_id"
+  end
+
+  create_table "budget_users", force: :cascade do |t|
+    t.bigint "budget_id"
+    t.bigint "user_id"
+    t.index ["budget_id"], name: "index_budget_users_on_budget_id"
+    t.index ["user_id"], name: "index_budget_users_on_user_id"
+  end
+
+  create_table "budgets", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "total_payable_in_cents", default: 0, null: false
+    t.integer "balance_to_pay_in_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.bigint "budget_id", null: false
+    t.string "name", null: false
+    t.integer "price_in_cents", default: 0, null: false
+    t.date "due_at", null: false
+    t.integer "status", default: 1, null: false
+    t.integer "kind", default: 1, null: false
+    t.integer "installment_number", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["budget_id"], name: "index_expenses_on_budget_id"
+    t.index ["kind"], name: "index_expenses_on_kind"
+    t.index ["status"], name: "index_expenses_on_status"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -32,4 +69,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_27_011822) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "expenses", "budgets"
 end
