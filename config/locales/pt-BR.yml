@@ -8,19 +8,15 @@ pt-BR:
           has_one: Não é possível excluir o registro pois existe um %{record} dependente
           has_many: Não é possível excluir o registro pois existem %{record} dependentes
     attributes:
-      order:
-        state:
-          pending: "Registrado"
-          prepared: "Preparado"
-          sent: "Enviado"
-          completed: "Finalizado"
-          canceled: "Cancelado"
-      delivery:
-        state:
-          pending: "Registrado"
-          in_progress: "Em Progresso"
-          completed: "Finalizado"
-          canceled: "Cancelado"
+      expense:
+        statuses:
+          created: Criado
+          paid: Pago
+          overdue: Atrasado
+        kinds:
+          once:
+          fixed:
+          installment:
   date:
     abbr_day_names:
     - Dom

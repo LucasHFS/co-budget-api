@@ -10,6 +10,7 @@ class BudgetsController < ApplicationController
 
   def create
     @budget = Budget.new(budget_params)
+    @budget.users << current_user
 
     if @budget.save
       render :show, status: :created

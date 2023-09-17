@@ -6,8 +6,8 @@ Rails.application.routes.draw do
     resources :budgets, only: %i[index create show update destroy]
     resources :expenses, only: %i[index create show update destroy] do
       member do
-        put 'pay_out', to: 'expenses#pay_out'
-        put 'unpay_out', to: 'expenses#unpay_out'
+        put 'pay', to: 'expenses#pay'
+        put 'unpay', to: 'expenses#unpay'
       end
     end
   end

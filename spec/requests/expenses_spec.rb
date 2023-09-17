@@ -306,8 +306,8 @@ RSpec.describe 'Expenses' do
     end
   end
 
-  describe 'PUT /pay_out' do
-    subject(:request) { put "/api/expenses/#{expense.id}/pay_out", params: {}, headers: }
+  describe 'PUT /pay' do
+    subject(:request) { put "/api/expenses/#{expense.id}/pay", params: {}, headers: }
 
     let(:token) { user.generate_jwt }
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
@@ -330,8 +330,8 @@ RSpec.describe 'Expenses' do
     end
   end
 
-  describe 'PUT /unpay_out' do
-    subject(:request) { put "/api/expenses/#{expense.id}/unpay_out", params: {}, headers: }
+  describe 'PUT /unpay' do
+    subject(:request) { put "/api/expenses/#{expense.id}/unpay", params: {}, headers: }
 
     let(:token) { user.generate_jwt }
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }

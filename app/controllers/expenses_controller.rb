@@ -2,10 +2,12 @@
 
 class ExpensesController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_expense!, only: %i[update destroy pay_out unpay_out]
+  before_action :find_expense!, only: %i[update destroy pay unpay]
 
   def index
-    @expenses = Expense.all.order(:name)
+    @expenses = current_user.budgets.find(params[:budgetId]).expenses if params[:budgetId]
+    @expenses = @expenses.from_month(selected_date) if params[:selectedMonthDate]
+    @expenses = @expenses.order(:due_at)
   end
 
   def create
@@ -49,7 +51,7 @@ class ExpensesController < ApplicationController
     end
   end
 
-  def pay_out
+  def pay
     if @expense.paid!
       render json: {}
     else
@@ -57,7 +59,7 @@ class ExpensesController < ApplicationController
     end
   end
 
-  def unpay_out
+  def unpay
     success = @expense.late? ? @expense.overdue! : @expense.created!
 
     if success
@@ -88,5 +90,11 @@ class ExpensesController < ApplicationController
         details: ['não foi possivel alterar']
       }
     }, status: :unprocessable_entity
+  end
+
+  def selected_date
+    Date.parse(params[:selectedMonthDate])
+  rescue ArgumentError
+    Date.current
   end
 end

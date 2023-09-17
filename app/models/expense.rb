@@ -12,6 +12,8 @@ class Expense < ApplicationRecord
   validates :price_in_cents, presence: true
   validates :due_at, presence: true
 
+  scope :from_month, ->(date) { where(due_at: date.all_month) }
+
   def price
     price_in_cents / 100.0
   end
@@ -28,6 +30,7 @@ class Expense < ApplicationRecord
 
   def update_status
     return if new_record?
+
     self.status = late? ? :overdue : :created if due_at_changed?
   end
 end
