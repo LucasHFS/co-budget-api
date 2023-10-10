@@ -136,7 +136,7 @@ RSpec.describe 'Budgets' do
     end
 
     let(:user) { create(:user) }
-    let(:budget) { create(:budget) }
+    let(:budget) { create(:budget, users:[user]) }
 
     let(:params) do
       {
@@ -219,7 +219,7 @@ RSpec.describe 'Budgets' do
     end
 
     let(:user) { create(:user) }
-    let!(:budget) { create(:budget, name: 'budget to delete') }
+    let!(:budget) { create(:budget, name: 'budget to delete', users:[user]) }
     let(:budget_id) { budget.id }
 
     context 'when not logged in' do
