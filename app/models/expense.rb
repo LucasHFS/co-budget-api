@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 class Expense < ApplicationRecord
-  enum :status, created: 1, paid: 2, overdue: 3
+  FIXED_EXPENSES_QUANTITY = 24
+
+  enum :status, overdue: 1, created: 2, paid: 3
   enum :kind, once: 1, fixed: 2, installment: 3
 
   belongs_to :budget
+  belongs_to :collection, optional: true
 
-  before_save :update_status
-  after_destroy :update_budget_prices
-  after_save :update_budget_prices
+  before_validation :update_status
 
   validates :name, presence: true
   validates :price_in_cents, presence: true
@@ -24,13 +27,7 @@ class Expense < ApplicationRecord
 
   private
 
-  def update_budget_prices
-    budget.update_budget_prices!
-  end
-
   def update_status
-    return if new_record?
-
     self.status = late? ? :overdue : :created if due_at_changed?
   end
 end

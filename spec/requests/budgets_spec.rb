@@ -12,8 +12,9 @@ RSpec.describe 'Budgets' do
 
     let(:user) { create(:user) }
 
-    let!(:all_budgets) do
-      create_list(:budget, 30)
+    before do
+      create_list(:budget, 5, users: [user])
+      create_list(:budget, 3)
     end
 
     context 'when not logged in' do
@@ -37,9 +38,9 @@ RSpec.describe 'Budgets' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'lists all budgets' do
+      it "lists all user's budgets" do
         request
-        expect(json_body[:budgets].length).to eq(Budget.count)
+        expect(json_body[:budgets].length).to eq(5)
       end
     end
   end

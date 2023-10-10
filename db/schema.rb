@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_08_233204) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_23_153834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_233204) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "collections", force: :cascade do |t|
+    t.integer "kind", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "expenses", force: :cascade do |t|
     t.bigint "budget_id", null: false
     t.string "name", null: false
@@ -46,7 +52,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_233204) do
     t.integer "installment_number", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "collection_id"
     t.index ["budget_id"], name: "index_expenses_on_budget_id"
+    t.index ["collection_id"], name: "index_expenses_on_collection_id"
     t.index ["kind"], name: "index_expenses_on_kind"
     t.index ["status"], name: "index_expenses_on_status"
   end
@@ -70,4 +78,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_233204) do
   end
 
   add_foreign_key "expenses", "budgets"
+  add_foreign_key "expenses", "collections"
 end

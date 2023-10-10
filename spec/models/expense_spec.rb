@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # spec/models/expense_spec.rb
 
 require 'rails_helper'
 
-RSpec.describe Expense, type: :model do
+RSpec.describe Expense do
   let(:budget) { create(:budget) }
 
   describe 'validations' do
@@ -12,7 +14,7 @@ RSpec.describe Expense, type: :model do
   end
 
   describe 'enums' do
-    it { is_expected.to define_enum_for(:status).with_values(created: 1, paid: 2, overdue: 3) }
+    it { is_expected.to define_enum_for(:status).with_values(overdue: 1, created: 2, paid: 3) }
     it { is_expected.to define_enum_for(:kind).with_values(once: 1, fixed: 2, installment: 3) }
   end
 
@@ -21,19 +23,13 @@ RSpec.describe Expense, type: :model do
   end
 
   describe 'callbacks' do
-    let(:expense) { create(:expense, budget: budget) }
+    let(:expense) { create(:expense, budget:) }
 
     it 'calls check_status before saving' do
       expect(expense).to receive(:update_status)
       expense.save
     end
-
-    it 'calls update_budget_prices after saving' do
-      expect(expense).to receive(:update_budget_prices)
-      expense.save
-    end
   end
-
 
   describe 'methods' do
     let(:expense) { create(:expense, budget:) }
@@ -44,10 +40,10 @@ RSpec.describe Expense, type: :model do
     end
 
     it 'checks if the expense is late' do
-      expense.due_at = 2.day.ago
+      expense.due_at = 2.days.ago
       expect(expense.late?).to be true
 
-      expense.due_at = 2.day.from_now
+      expense.due_at = 2.days.from_now
       expect(expense.late?).to be false
     end
   end
@@ -55,23 +51,16 @@ RSpec.describe Expense, type: :model do
   describe 'private methods' do
     let!(:expense) { create(:expense, budget:) }
 
-    describe '#update_budget_prices' do
-      it 'calls update_budget_prices! on associated budget' do
-        expect(budget).to receive(:update_budget_prices!)
-        expense.send(:update_budget_prices)
-      end
-    end
-
     describe '#check_status' do
       context 'when due_at changes' do
         it 'updates status to overdue if late' do
-          expense.due_at = 2.day.ago
+          expense.due_at = 2.days.ago
           expense.save
           expect(expense.reload.status).to eq('overdue')
         end
 
         it 'updates status to created if not late and not paid' do
-          expense.due_at = 2.day.from_now
+          expense.due_at = 2.days.from_now
           expense.save
           expect(expense.reload.status).to eq('created')
         end

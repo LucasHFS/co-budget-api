@@ -46,3 +46,5 @@ gem 'state_machine', '~> 1.2'
 
 gem 'dotenv-rails', '~> 2.8'
 
+
+gem "activerecord-import", "~> 1.5"

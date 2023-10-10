@@ -5,7 +5,7 @@ class BudgetsController < ApplicationController
   before_action :find_budget!, only: %i[update destroy]
 
   def index
-    @budgets = Budget.all.order(:name)
+    @budgets = current_user.budgets.order(:name)
   end
 
   def create
@@ -44,7 +44,7 @@ class BudgetsController < ApplicationController
       render json: {
         error: {
           message: 'Erro de exclusão',
-          details: ['não foi possivel excluir o produto']
+          details: ['não foi possivel excluir o orçamento']
         }
       }, status: :unprocessable_entity
     end

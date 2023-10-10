@@ -1,0 +1,18 @@
+
+[1mFrom:[0m /home/lucas/Documents/dev/side/co_finances/co-finances-api/app/controllers/expenses_controller.rb:69 ExpensesController#destroy:
+
+    [1;34m67[0m: [32mdef[0m [1;34mdestroy[0m
+    [1;34m68[0m:   expenses = [1;34;4mExpense[0m.none
+ => [1;34m69[0m:   binding.pry
+    [1;34m70[0m:   [32mif[0m params[[33m:target_expenses[0m] === [31m[1;31m'[0m[31mone[1;31m'[0m[31m[0m
+    [1;34m71[0m:     expenses = [1;34;4mExpense[0m.where([35mid[0m: @expense.id)
+    [1;34m72[0m:   [32melsif[0m params[[33m:target_expenses[0m] === [31m[1;31m'[0m[31mthis_and_next[1;31m'[0m[31m[0m
+    [1;34m73[0m:     expenses = @expense.collection.expenses.where([31m[1;31m'[0m[31mdue_at >= ?[1;31m'[0m[31m[0m, @expense.due_at)
+    [1;34m74[0m:   [32melsif[0m params[[33m:target_expenses[0m] === [31m[1;31m'[0m[31mall[1;31m'[0m[31m[0m
+    [1;34m75[0m:     expenses = @expense.collection.expenses
+    [1;34m76[0m:   [32mend[0m
+    [1;34m77[0m: 
+    [1;34m78[0m:   expenses.destroy_all
+    [1;34m79[0m:   render [35mjson[0m: {}, [35mstatus[0m: [33m:no_content[0m
+    [1;34m80[0m: [32mend[0m
+
