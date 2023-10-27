@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-class Expense < ApplicationRecord
-  FIXED_EXPENSES_QUANTITY = 24
+class Transaction < ApplicationRecord
+  FIXED_TRANSACTIONS_QUANTITY = 24
 
   enum :status, overdue: 1, created: 2, paid: 3
   enum :kind, once: 1, fixed: 2, installment: 3
+  enum :transaction_type, expense: 1, income: 2
 
   belongs_to :budget
   belongs_to :collection, optional: true

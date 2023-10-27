@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :expense do
+  factory :transaction do
     association :budget
     name { Faker::Lorem.word }
     price_in_cents { Faker::Number.number(digits: 4) }

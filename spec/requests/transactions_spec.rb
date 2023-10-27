@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Expenses' do
+RSpec.describe 'Transactions' do
   describe 'GET /index' do
-    subject(:request) { get "/api/expenses?budgetId=#{budget.id}", params: {}, headers: }
+    subject(:request) { get "/api/transactions?budgetId=#{budget.id}", params: {}, headers: }
 
     let(:json_body) do
       JSON.parse(response.body, symbolize_names: true)
@@ -15,8 +15,8 @@ RSpec.describe 'Expenses' do
     let(:budget) { create(:budget, users: [user]) }
 
     before do
-      create_list(:expense, 5, budget:)
-      create_list(:expense, 5)
+      create_list(:transaction, 5, budget:)
+      create_list(:transaction, 5)
     end
 
     context 'when not logged in' do
@@ -40,15 +40,15 @@ RSpec.describe 'Expenses' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'lists all expenses' do
+      it "lists all user's transactions" do
         request
-        expect(json_body[:expenses].length).to eq(5)
+        expect(json_body[:transactions].length).to eq(5)
       end
     end
   end
 
   describe 'POST /create' do
-    subject(:request) { post '/api/expenses', params:, headers: }
+    subject(:request) { post '/api/transactions', params:, headers: }
 
     let(:json_body) do
       JSON.parse(response.body, symbolize_names: true)
@@ -59,8 +59,8 @@ RSpec.describe 'Expenses' do
 
     let(:params) do
       {
-        expense: {
-          name: 'expense a',
+        transaction: {
+          name: 'transaction a',
           price: 100,
           due_at: Time.zone.today + 5,
           budget_id: budget.id
@@ -72,11 +72,11 @@ RSpec.describe 'Expenses' do
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
     context 'when successful' do
-      context 'and creating a fixed expenses' do
+      context 'and creating a fixed transactions' do
         let(:params) do
           {
-            expense: {
-              name: 'expense a',
+            transaction: {
+              name: 'transaction a',
               price: 100,
               due_at: Time.zone.today + 5,
               budget_id: budget.id,
@@ -90,17 +90,17 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:created)
         end
 
-        it 'creates the right amount of expenses' do
+        it 'creates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq Expense::FIXED_EXPENSES_QUANTITY
+          expect(Transaction.count).to eq Transaction::FIXED_TRANSACTIONS_QUANTITY
         end
 
-        it 'creates the expense with the right data' do
+        it 'creates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense a',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction a',
             price_in_cents: 100_00,
             budget_id: budget.id,
             kind: 'fixed'
@@ -108,11 +108,11 @@ RSpec.describe 'Expenses' do
         end
       end
 
-      context 'and creating expenses with installments' do
+      context 'and creating transactions with installments' do
         let(:params) do
           {
-            expense: {
-              name: 'expense a',
+            transaction: {
+              name: 'transaction a',
               price: 100,
               due_at: Time.zone.today + 5,
               budget_id: budget.id,
@@ -127,17 +127,17 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:created)
         end
 
-        it 'creates the right amount of expenses' do
+        it 'creates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq 3
+          expect(Transaction.count).to eq 3
         end
 
-        it 'creates the expense with the right data' do
+        it 'creates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense a',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction a',
             price_in_cents: 100_00,
             budget_id: budget.id,
             kind: 'installment'
@@ -145,23 +145,23 @@ RSpec.describe 'Expenses' do
         end
       end
 
-      context 'and creating single expense' do
+      context 'and creating single transaction' do
         it 'is returns :created status' do
           request
           expect(response).to have_http_status(:created)
         end
 
-        it 'creates the right amount of expenses' do
+        it 'creates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq 1
+          expect(Transaction.count).to eq 1
         end
 
-        it 'creates the expense with the right data' do
+        it 'creates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense a',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction a',
             price_in_cents: 100_00,
             budget_id: budget.id,
             kind: 'once'
@@ -172,8 +172,8 @@ RSpec.describe 'Expenses' do
       context 'when validation fails' do
         let(:params) do
           {
-            expense: {
-              name: 'expense a',
+            transaction: {
+              name: 'transaction a',
               due_at: Time.zone.today + 5
             }
           }
@@ -201,7 +201,7 @@ RSpec.describe 'Expenses' do
   end
 
   xdescribe 'PUT /update' do
-    subject(:request) { put "/api/expenses/#{expense.id}", params:, headers: }
+    subject(:request) { put "/api/transactions/#{transaction.id}", params:, headers: }
 
     let(:json_body) do
       JSON.parse(response.body, symbolize_names: true)
@@ -210,13 +210,13 @@ RSpec.describe 'Expenses' do
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
     let(:user) { create(:user) }
-    let(:expense) { create(:expense) }
+    let(:transaction) { create(:transaction) }
     let(:budget) { create(:budget) }
 
     let(:params) do
       {
-        expense: {
-          name: 'expense b',
+        transaction: {
+          name: 'transaction b',
           price: 100,
           due_at: Time.zone.today + 5,
           budget_id: budget.id
@@ -228,11 +228,11 @@ RSpec.describe 'Expenses' do
     let(:token) { user.generate_jwt }
 
     context 'when successful' do
-      context 'and updating a fixed expenses' do
+      context 'and updating a fixed transactions' do
         let(:params) do
           {
-            expense: {
-              name: 'expense b',
+            transaction: {
+              name: 'transaction b',
               price: 50,
               due_at: Time.zone.today + 5,
               budget_id: budget.id,
@@ -246,17 +246,17 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:ok)
         end
 
-        xit 'updates the right amount of expenses' do
+        xit 'updates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq Expense::FIXED_EXPENSES_QUANTITY
+          expect(Transaction.count).to eq Transaction::FIXED_TRANSACTIONS_QUANTITY
         end
 
-        it 'updates the expense with the right data' do
+        it 'updates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense b',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction b',
             price_in_cents: 50_00,
             budget_id: budget.id,
             kind: 'fixed'
@@ -264,11 +264,11 @@ RSpec.describe 'Expenses' do
         end
       end
 
-      context 'and updating expenses with installments' do
+      context 'and updating transactions with installments' do
         let(:params) do
           {
-            expense: {
-              name: 'expense b',
+            transaction: {
+              name: 'transaction b',
               price: 50,
               due_at: Time.zone.today + 5,
               budget_id: budget.id,
@@ -283,17 +283,17 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:ok)
         end
 
-        xit 'updates the right amount of expenses' do
+        xit 'updates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq 3
+          expect(Transaction.count).to eq 3
         end
 
-        it 'updates the expense with the right data' do
+        it 'updates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense b',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction b',
             price_in_cents: 50_00,
             budget_id: budget.id,
             kind: 'installment'
@@ -301,11 +301,11 @@ RSpec.describe 'Expenses' do
         end
       end
 
-      context 'and updating single expense' do
+      context 'and updating single transaction' do
         let(:params) do
           {
-            expense: {
-              name: 'expense b',
+            transaction: {
+              name: 'transaction b',
               price: 50,
               due_at: Time.zone.today + 5,
               budget_id: budget.id,
@@ -320,17 +320,17 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:ok)
         end
 
-        xit 'updates the right amount of expenses' do
+        xit 'updates the right amount of transactions' do
           request
 
-          expect(Expense.count).to eq 3
+          expect(Transaction.count).to eq 3
         end
 
-        it 'updates the expense with the right data' do
+        it 'updates the transaction with the right data' do
           request
 
-          expect(Expense.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'expense b',
+          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+            name: 'transaction b',
             price_in_cents: 50_00,
             budget_id: budget.id,
             kind: 'once'
@@ -342,7 +342,7 @@ RSpec.describe 'Expenses' do
     xcontext 'when validation fails' do
       let(:params) do
         {
-          expense: {
+          transaction: {
             name: nil
           }
         }
@@ -369,15 +369,15 @@ RSpec.describe 'Expenses' do
   end
 
   xdescribe 'DELETE /delete' do
-    subject(:request) { delete "/api/expenses/#{expense_id}", params: {}, headers: }
+    subject(:request) { delete "/api/transactions/#{transaction_id}", params: {}, headers: }
 
     let(:json_body) do
       JSON.parse(response.body, symbolize_names: true)
     end
 
     let(:user) { create(:user) }
-    let!(:expense) { create(:expense, name: 'expense to delete') }
-    let(:expense_id) { expense.id }
+    let!(:transaction) { create(:transaction, name: 'transaction to delete') }
+    let(:transaction_id) { transaction.id }
 
     context 'when not logged in' do
       let(:headers) do
@@ -401,10 +401,10 @@ RSpec.describe 'Expenses' do
           expect(response).to have_http_status(:no_content)
         end
 
-        it 'creates the expense on the db' do
+        it 'creates the transaction on the db' do
           request
 
-          expect(Expense.find_by(name: 'expense to delete')).to be_nil
+          expect(Transaction.find_by(name: 'transaction to delete')).to be_nil
         end
       end
 
@@ -429,7 +429,7 @@ RSpec.describe 'Expenses' do
       end
 
       context 'when not found' do
-        subject(:request) { delete '/api/expenses/non-existing', params: {}, headers: }
+        subject(:request) { delete '/api/transactions/non-existing', params: {}, headers: }
 
         it 'is returns :unprocessable_entity status' do
           request
@@ -453,7 +453,7 @@ RSpec.describe 'Expenses' do
   end
 
   describe 'PUT /pay' do
-    subject(:request) { put "/api/expenses/#{expense.id}/pay", params: {}, headers: }
+    subject(:request) { put "/api/transactions/#{transaction.id}/pay", params: {}, headers: }
 
     let(:token) { user.generate_jwt }
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
@@ -463,21 +463,21 @@ RSpec.describe 'Expenses' do
     end
 
     let(:user) { create(:user) }
-    let(:expense) { create(:expense) }
+    let(:transaction) { create(:transaction) }
 
     it 'is returns :ok status' do
       request
       expect(response).to have_http_status(:ok)
     end
 
-    it 'updates the expense status to paid' do
+    it 'updates the transaction status to paid' do
       request
-      expect(expense.reload.status).to eq('paid')
+      expect(transaction.reload.status).to eq('paid')
     end
   end
 
   describe 'PUT /unpay' do
-    subject(:request) { put "/api/expenses/#{expense.id}/unpay", params: {}, headers: }
+    subject(:request) { put "/api/transactions/#{transaction.id}/unpay", params: {}, headers: }
 
     let(:token) { user.generate_jwt }
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
@@ -488,31 +488,31 @@ RSpec.describe 'Expenses' do
 
     let(:user) { create(:user) }
 
-    context 'when expense is late' do
-      let(:expense) { create(:expense, :late) }
+    context 'when transaction is late' do
+      let(:transaction) { create(:transaction, :late) }
 
       it 'is returns :ok status' do
         request
         expect(response).to have_http_status(:ok)
       end
 
-      it 'updates the expense status to overdue' do
+      it 'updates the transaction status to overdue' do
         request
-        expect(expense.reload.status).to eq('overdue')
+        expect(transaction.reload.status).to eq('overdue')
       end
     end
 
-    context 'when expense is not late' do
-      let(:expense) { create(:expense) }
+    context 'when transaction is not late' do
+      let(:transaction) { create(:transaction) }
 
       it 'is returns :ok status' do
         request
         expect(response).to have_http_status(:ok)
       end
 
-      it 'updates the expense status to created' do
+      it 'updates the transaction status to created' do
         request
-        expect(expense.reload.status).to eq('created')
+        expect(transaction.reload.status).to eq('created')
       end
     end
   end

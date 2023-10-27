@@ -6,7 +6,7 @@ class CreateCollections < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    change_table :expenses do |t|
+    change_table :transactions do |t|
       t.references :collection, foreign_key: true
     end
   end

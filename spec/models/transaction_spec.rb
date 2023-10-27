@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# spec/models/expense_spec.rb
+# spec/models/transaction_spec.rb
 
 require 'rails_helper'
 
-RSpec.describe Expense do
+RSpec.describe Transaction do
   let(:budget) { create(:budget) }
 
   describe 'validations' do
@@ -23,52 +23,52 @@ RSpec.describe Expense do
   end
 
   describe 'callbacks' do
-    let(:expense) { create(:expense, budget:) }
+    let(:transaction) { create(:transaction, budget:) }
 
     it 'calls check_status before saving' do
-      expect(expense).to receive(:update_status)
-      expense.save
+      expect(transaction).to receive(:update_status)
+      transaction.save
     end
   end
 
   describe 'methods' do
-    let(:expense) { create(:expense, budget:) }
+    let(:transaction) { create(:transaction, budget:) }
 
     it 'calculates price correctly' do
-      expense.price_in_cents = 2500
-      expect(expense.price).to eq(25.00)
+      transaction.price_in_cents = 2500
+      expect(transaction.price).to eq(25.00)
     end
 
-    it 'checks if the expense is late' do
-      expense.due_at = 2.days.ago
-      expect(expense.late?).to be true
+    it 'checks if the transaction is late' do
+      transaction.due_at = 2.days.ago
+      expect(transaction.late?).to be true
 
-      expense.due_at = 2.days.from_now
-      expect(expense.late?).to be false
+      transaction.due_at = 2.days.from_now
+      expect(transaction.late?).to be false
     end
   end
 
   describe 'private methods' do
-    let!(:expense) { create(:expense, budget:) }
+    let!(:transaction) { create(:transaction, budget:) }
 
     describe '#check_status' do
       context 'when due_at changes' do
         it 'updates status to overdue if late' do
-          expense.due_at = 2.days.ago
-          expense.save
-          expect(expense.reload.status).to eq('overdue')
+          transaction.due_at = 2.days.ago
+          transaction.save
+          expect(transaction.reload.status).to eq('overdue')
         end
 
         it 'updates status to created if not late and not paid' do
-          expense.due_at = 2.days.from_now
-          expense.save
-          expect(expense.reload.status).to eq('created')
+          transaction.due_at = 2.days.from_now
+          transaction.save
+          expect(transaction.reload.status).to eq('created')
         end
       end
 
       context 'when due_at does not change' do
         it 'does not change the status' do
-          expect { expense.save }.not_to change { expense.reload.status }
+          expect { transaction.save }.not_to change { transaction.reload.status }
         end
       end
     end
