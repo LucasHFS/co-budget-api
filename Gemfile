@@ -48,3 +48,6 @@ gem 'dotenv-rails', '~> 2.8'
 
 
 gem "activerecord-import", "~> 1.5"
+
+gem "sentry-ruby", "~> 5.12"
+gem "sentry-rails", "~> 5.12"
