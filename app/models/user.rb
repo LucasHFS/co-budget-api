@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   has_many :budget_users, dependent: :destroy
   has_many :budgets, through: :budget_users
-  has_many :expenses, through: :budgets
+  has_many :transactions, through: :budgets
 
   def generate_jwt
     Warden::JWTAuth::UserEncoder

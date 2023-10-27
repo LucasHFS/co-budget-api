@@ -4,10 +4,10 @@ Rails.application.routes.draw do
 
     resource :user, only: %i[show]
     resources :budgets, only: %i[index create show update destroy]
-    resources :expenses, only: %i[index create show update destroy] do
+    resources :transactions, only: %i[index create show update destroy] do
       member do
-        put 'pay', to: 'expenses#pay'
-        put 'unpay', to: 'expenses#unpay'
+        put 'pay', to: 'transactions#pay'
+        put 'unpay', to: 'transactions#unpay'
       end
     end
   end

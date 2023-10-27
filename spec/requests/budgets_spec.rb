@@ -252,7 +252,7 @@ RSpec.describe 'Budgets' do
       end
 
       context 'when validation fails' do
-        let!(:expense) { create(:expense, budget:) }
+        let!(:transaction) { create(:transaction, budget:) }
 
         it 'is returns :unprocessable_entity status' do
           request
