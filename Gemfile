@@ -51,3 +51,4 @@ gem "activerecord-import", "~> 1.5"
 
 gem "sentry-ruby", "~> 5.12"
 gem "sentry-rails", "~> 5.12"
+gem "rack-timeout", "~> 0.6.3"
