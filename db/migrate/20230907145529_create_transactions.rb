@@ -15,6 +15,6 @@ class CreateTransactions < ActiveRecord::Migration[7.0]
 
     add_index :transactions, :status
     add_index :transactions, :kind
-    add_index :transactions, :type
+    add_index :transactions, :transaction_type
   end
 end
