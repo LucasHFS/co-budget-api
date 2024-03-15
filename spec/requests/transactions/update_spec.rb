@@ -13,33 +13,18 @@ RSpec.describe 'Transactions' do
     let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
     let(:user) { create(:user) }
-    let(:transaction) { create(:transaction) }
+    let!(:collection) { create(:collection, :with_transactions) }
+    let(:transaction) { collection.transactions.first }
     let(:budget) { create(:budget) }
 
-    let(:params) do
-      {
-        transaction: {
-          name: 'transaction b',
-          price: 100,
-          due_at: Time.zone.today + 5,
-          budget_id: budget.id
-        }
-      }
-    end
-
-    let(:headers) { { 'Authorization' => "Bearer #{token}" } }
-    let(:token) { user.generate_jwt }
-
     context 'when successful' do
-      context 'and updating a fixed transactions' do
+      context 'with all transactions' do
         let(:params) do
           {
             transaction: {
               name: 'transaction b',
-              price: 50,
-              due_at: Time.zone.today + 5,
-              budget_id: budget.id,
-              kind: 'fixed'
+              price: 55.7,
+              target_transactions: 'all'
             }
           }
         end
@@ -49,34 +34,54 @@ RSpec.describe 'Transactions' do
           expect(response).to have_http_status(:ok)
         end
 
-        xit 'updates the right amount of transactions' do
-          request
-
-          expect(Transaction.count).to eq Transaction::FIXED_TRANSACTIONS_QUANTITY
-        end
+        # it 'updates the right amount of transactions' do
+        #   expect { request }.to change(Transaction, :count).by(3)
+        # end
 
         it 'updates the transaction with the right data' do
           request
 
-          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'transaction b',
-            price_in_cents: 50_00,
-            budget_id: budget.id,
-            kind: 'fixed'
+          expect(collection.transactions.pluck(:name, :price_in_cents).uniq.flatten).to eq(
+            ['transaction b', 5570]
           )
         end
       end
 
-      context 'and updating transactions with installments' do
+      # context 'with this_and_next transactions' do
+      #   let(:params) do
+      #     {
+      #       transaction: {
+      #         name: 'transaction b',
+      #         price: 55.7,
+      #         target_transactions: 'this_and_next'
+      #       }
+      #     }
+      #   end
+
+      #   it 'is returns :ok status' do
+      #     request
+      #     expect(response).to have_http_status(:ok)
+      #   end
+
+      #   # it 'updates the right amount of transactions' do
+      #   #   expect { request }.to change(Transaction, :count).by(3)
+      #   # end
+
+      #   it 'updates the transaction with the right data' do
+      #     request
+
+      #     expect(collection.transactions.pluck(:name, :price_in_cents).uniq).to eq(
+      #       ["transaction b", 5570]
+      #     )
+      #   end
+      # end
+
+      context 'with single transaction' do
         let(:params) do
           {
             transaction: {
               name: 'transaction b',
-              price: 50,
-              due_at: Time.zone.today + 5,
-              budget_id: budget.id,
-              kind: 'installment',
-              installment_number: 3
+              price: 55.7,
             }
           }
         end
@@ -86,63 +91,22 @@ RSpec.describe 'Transactions' do
           expect(response).to have_http_status(:ok)
         end
 
-        xit 'updates the right amount of transactions' do
-          request
-
-          expect(Transaction.count).to eq 3
-        end
+        # it 'updates the right amount of transactions' do
+        #   expect { request }.to change(Transaction, :count).by(1)
+        # end
 
         it 'updates the transaction with the right data' do
           request
 
-          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
+          expect(transaction.reload.attributes.transform_keys(&:to_sym)).to include(
             name: 'transaction b',
-            price_in_cents: 50_00,
-            budget_id: budget.id,
-            kind: 'installment'
-          )
-        end
-      end
-
-      context 'and updating single transaction' do
-        let(:params) do
-          {
-            transaction: {
-              name: 'transaction b',
-              price: 50,
-              due_at: Time.zone.today + 5,
-              budget_id: budget.id,
-              kind: 'installment',
-              installment_number: 3
-            }
-          }
-        end
-
-        it 'is returns :ok status' do
-          request
-          expect(response).to have_http_status(:ok)
-        end
-
-        xit 'updates the right amount of transactions' do
-          request
-
-          expect(Transaction.count).to eq 3
-        end
-
-        it 'updates the transaction with the right data' do
-          request
-
-          expect(Transaction.last.attributes.transform_keys(&:to_sym)).to include(
-            name: 'transaction b',
-            price_in_cents: 50_00,
-            budget_id: budget.id,
-            kind: 'once'
+            price_in_cents: 55_70
           )
         end
       end
     end
 
-    xcontext 'when validation fails' do
+    context 'when validation fails' do
       let(:params) do
         {
           transaction: {

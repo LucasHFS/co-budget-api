@@ -22,7 +22,7 @@ class TransactionsController < ApplicationController
 
   def update
     result = Transactions::Update.new(
-      target_transactions: transaction_attributes[:target_transactions],
+      target_transactions: transaction_params[:target_transactions],
       attributes: transaction_attributes,
       transaction: @transaction
     ).call

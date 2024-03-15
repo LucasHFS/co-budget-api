@@ -12,17 +12,18 @@ module Transactions
 
     def call
       transactions = []
-      case target_transactions
+      @target_transactions ||= 'one'
+      case @target_transactions
       when 'one'
-        transaction.assign_attributes(transaction_attributes)
-      when 'this_and_next'
-        transactions = transaction.collection.transactions.where('due_at >= ?', transaction.due_at).each do |transaction|
-          transaction.assign_attributes(transaction_attributes)
-          transaction.updated_at = Time.current
-        end
+        transaction.assign_attributes(attributes)
+      # when 'this_and_next'
+      #   transactions = transaction.collection.transactions.where('due_at >= ?', transaction.due_at).each do |transaction|
+      #     transaction.assign_attributes(attributes)
+      #     transaction.updated_at = Time.current
+      #   end
       when 'all'
         transactions = transaction.collection.transactions.each do |transaction|
-          transaction.assign_attributes(transaction_attributes)
+          transaction.assign_attributes(attributes)
           transaction.updated_at = Time.current
         end
       end
@@ -36,38 +37,10 @@ module Transactions
 
       if success
         Result.success
-      else
+      elsif transactions.any?
         Result.failure(res.failed_instances.map(&:errors).map(&:full_messages).flatten)
-      end
-    end
-
-    private
-
-    def build_transactions
-      case attributes[:kind]
-      when 'installment'
-        create_installment_transactions
-      when 'fixed'
-        create_fixed_transactions
       else
-        [Transaction.new(attributes)]
-      end
-    end
-
-    def create_installment_transactions
-      collection = Collection.create(kind: :installment)
-      Array.new(attributes[:installment_number].to_i) do |index|
-        due_at_date = Date.parse(attributes[:due_at])
-        Transaction.new(attributes.merge(collection_id: collection.id, due_at: due_at_date + index.months))
-      end
-    end
-
-    def create_fixed_transactions
-      collection = Collection.create(kind: :fixed)
-
-      Array.new(Transaction::FIXED_TRANSACTIONS_QUANTITY) do |index|
-        due_at_date = Date.parse(attributes[:due_at])
-        Transaction.new(attributes.merge(collection_id: collection.id, due_at: due_at_date + index.months))
+        Result.failure(transaction.errors.full_messages)
       end
     end
   end
