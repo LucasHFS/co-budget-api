@@ -10,16 +10,23 @@ module Transactions
     end
 
     def call
-      transactions = Transaction.none
-      case target_transactions
-      when 'one'
-        transactions = Transaction.where(id: @transaction.id)
-      when 'this_and_next'
-        transactions = @transaction.collection.transactions.where('due_at >= ?', @transaction.due_at)
-      when 'all'
-        transactions = @transaction.collection.transactions
+      target_transactions ||= 'one'
+      transactions = case target_transactions
+                     when 'one'
+                       Transaction.where(id: transaction.id)
+                     when 'this_and_next'
+                       transaction.collection.transactions.where('due_at >= ?', transaction.due_at)
+                     when 'all'
+                       transaction.collection.transactions
+                     else
+                       Transaction.none
+                     end
+      deleted_transactions = transactions.destroy_all
+      if deleted_transactions&.any?
+        Result.success
+      else
+        Result.failure(errors: 'Erro ao deletar')
       end
-      transactions.destroy_all!
     end
   end
 end

@@ -15,5 +15,13 @@ module Transactions
       @transactions = @transactions.order(:status, :due_at, :name)
       Result.success(@transactions)
     end
+
+    private
+
+    def selected_date
+      Date.parse(params[:selectedMonthDate])
+    rescue ArgumentError
+      Date.current
+    end
   end
 end

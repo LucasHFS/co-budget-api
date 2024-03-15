@@ -35,15 +35,15 @@ class TransactionsController < ApplicationController
   end
 
   def destroy
-    result = Transactions::Create.new(
-      target_transactions: transaction_attributes[:target_transactions],
+    result = Transactions::Destroy.new(
+      target_transactions: params[:target_transactions],
       transaction: @transaction
     ).call
 
     if result.failure?
       render_error('Erro ao deletar', result.errors)
     else
-      render json: {}, status: :ok
+      render json: {}, status: :no_content
     end
   end
 
@@ -113,11 +113,5 @@ class TransactionsController < ApplicationController
         details: errors
       }
     }, status: :unprocessable_entity
-  end
-
-  def selected_date
-    Date.parse(params[:selectedMonthDate])
-  rescue ArgumentError
-    Date.current
   end
 end
