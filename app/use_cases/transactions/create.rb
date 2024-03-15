@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Transactions
   class Create
     attr_reader :attributes
@@ -27,10 +29,10 @@ module Transactions
     end
 
     def create_transactions_for(kind)
-      collection = Collection.create(kind: kind)
+      collection = Collection.create(kind:)
       transaction_quantity = calculate_quantity(kind)
 
-      transaction_quantity.times.map do |index|
+      Array.new(transaction_quantity) do |index|
         build_transaction_for(collection, index)
       end
     end
