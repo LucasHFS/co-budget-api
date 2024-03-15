@@ -11,22 +11,13 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    transactions = case transaction_attributes[:kind]
-               when 'installment'
-                 create_installment_transactions
-               when 'fixed'
-                 create_fixed_transactions
-               else
-                 [Transaction.new(transaction_attributes)]
-               end
+    result = Transactions::Create.new(attributes: transaction_attributes).call
 
-    res = Transaction.import(transactions)
-
-    if res.failed_instances.present?
+    if result.failure?
       render json: {
         error: {
           message: 'Erro de validação',
-          details: res.failed_instances.map(&:errors).map(&:full_messages).flatten
+          details: result.errors
         }
       }, status: :unprocessable_entity
     else
@@ -107,11 +98,28 @@ class TransactionsController < ApplicationController
   private
 
   def transaction_params
-    params.require(:transaction).permit(:name, :price, :due_at, :status, :kind, :transaction_type, :installment_number, :budget_id, :target_transactions)
+    params.require(:transaction).permit(
+      :name,
+      :price,
+      :due_at,
+      :status,
+      :kind,
+      :transaction_type,
+      :installment_number,
+      :budget_id,
+      :target_transactions
+    )
   end
 
   def transaction_attributes
-    transaction_params.slice(:name, :due_at, :status, :kind, :transaction_type, :installment_number, :budget_id).merge(price_in_cents: transaction_params[:price].to_f * 100)
+    transaction_params.slice(
+      :name,
+      :due_at,
+      :status,
+      :kind,
+      :transaction_type,
+      :installment_number,
+      :budget_id).merge(price_in_cents: transaction_params[:price].to_f * 100)
   end
 
   def find_transaction!
@@ -125,23 +133,6 @@ class TransactionsController < ApplicationController
         details: ['não foi possivel alterar']
       }
     }, status: :unprocessable_entity
-  end
-
-  def create_installment_transactions
-    collection = Collection.create(kind: :installment)
-    Array.new(transaction_attributes[:installment_number].to_i) do |index|
-      due_at_date = Date.parse(transaction_attributes[:due_at])
-      Transaction.new(transaction_attributes.merge(collection_id: collection.id, due_at: due_at_date + index.months))
-    end
-  end
-
-  def create_fixed_transactions
-    collection = Collection.create(kind: :fixed)
-
-    Array.new(Transaction::FIXED_TRANSACTIONS_QUANTITY) do |index|
-      due_at_date = Date.parse(transaction_attributes[:due_at])
-      Transaction.new(transaction_attributes.merge(collection_id: collection.id, due_at: due_at_date + index.months))
-    end
   end
 
   def selected_date
