@@ -10,7 +10,7 @@ module Transactions
     end
 
     def call
-      @transactions = current_user.budgets.find(params[:budgetId]).transactions || Transaction.all
+      @transactions = current_user.budgets.find(params[:budgetId]).transactions
       @transactions = @transactions.from_month(selected_date) if params[:selectedMonthDate].present?
       @transactions = @transactions.order(:status, :due_at, :name)
       Result.success(@transactions)

@@ -29,11 +29,13 @@ module Transactions
     end
 
     def create_transactions_for(kind)
-      collection = Collection.create(kind:)
-      transaction_quantity = calculate_quantity(kind)
+      ActiveRecord::Base.transaction do
+        collection = Collection.create(kind:)
+        transaction_quantity = calculate_quantity(kind)
 
-      Array.new(transaction_quantity) do |index|
-        build_transaction_for(collection, index)
+        Array.new(transaction_quantity) do |index|
+          build_transaction_for(collection, index)
+        end
       end
     end
 
