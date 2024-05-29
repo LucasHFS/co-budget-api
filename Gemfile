@@ -6,7 +6,7 @@ ruby '3.1.3'
 gem 'rails', '~> 7.1', '>= 7.1.3.3'
 
 gem 'pg', '~> 1.1'
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 6.4', '>= 6.4.2'
 
 gem 'bootsnap', require: false
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
@@ -25,14 +25,14 @@ group :development, :test do
   gem 'simplecov', '~> 0.22.0'
 end
 
-gem 'devise', '~> 4.8'
-gem 'devise-jwt', '~> 0.10.0'
-gem 'jbuilder', '~> 2.11'
+gem 'devise', '~> 4.9', '>= 4.9.4'
+gem 'devise-jwt', '~> 0.11.0'
+gem 'jbuilder', '~> 2.12'
 gem 'state_machine', '~> 1.2'
 
 gem 'dotenv-rails', '~> 2.8'
 
-gem 'activerecord-import', '~> 1.5'
+gem 'activerecord-import', '~> 1.7'
 
 gem 'rack-timeout', '~> 0.6.3'
 gem 'sentry-rails', '~> 5.12'
