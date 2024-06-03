@@ -37,3 +37,5 @@ gem 'activerecord-import', '~> 1.7'
 gem 'rack-timeout', '~> 0.6.3'
 gem 'sentry-rails', '~> 5.12'
 gem 'sentry-ruby', '~> 5.12'
+
+gem "flog", "~> 4.8"
