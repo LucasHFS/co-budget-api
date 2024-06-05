@@ -15,12 +15,7 @@ class BudgetsController < ApplicationController
     if @budget.save
       render :show, status: :created
     else
-      render json: {
-        error: {
-          message: 'Erro de validação',
-          details: @budget.errors.full_messages
-        }
-      }, status: :unprocessable_entity
+      render_error_message('Erro de validação', @budget.errors.full_messages)
     end
   end
 
@@ -28,12 +23,7 @@ class BudgetsController < ApplicationController
     if @budget.update(budget_params)
       render :show
     else
-      render json: {
-        error: {
-          message: 'Erro de validação',
-          details: @budget.errors.full_messages
-        }
-      }, status: :unprocessable_entity
+      render_error_message('Erro de validação', @budget.errors.full_messages)
     end
   end
 
@@ -41,12 +31,7 @@ class BudgetsController < ApplicationController
     if @budget.destroy
       render json: {}, status: :no_content
     else
-      render json: {
-        error: {
-          message: 'Erro de exclusão',
-          details: ['não foi possivel excluir o orçamento']
-        }
-      }, status: :unprocessable_entity
+      render_error_message('Erro de exclusão', 'não foi possivel excluir o orçamento')
     end
   end
 
@@ -58,5 +43,14 @@ class BudgetsController < ApplicationController
 
   def find_budget!
     @budget = current_user.budgets.find(params[:id])
+  end
+
+  def render_error_message(message, details)
+    render json: {
+      error: {
+        message:,
+        details:
+      }
+    }, status: :unprocessable_entity
   end
 end
