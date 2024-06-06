@@ -1,0 +1,3 @@
+update_statuses_job:
+  cron: '* * * * *'   # Runs daily at 1 AM
+  class: Transactions::Jobs::UpdateStatusesJob

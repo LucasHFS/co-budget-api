@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
-git_source(:github) { |_repo| 'https://github.com/#{repo}.git' }
+git_source(:github) { |_repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.3'
 
@@ -16,6 +18,7 @@ gem 'rack-cors'
 group :development, :test do
   gem 'factory_bot_rails', '~> 6.2'
   gem 'faker', '~> 3.1.0'
+  gem 'flog', '~> 4.8'
   gem 'pry', '~> 0.14.2'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'rubocop-performance', '~> 1.14'
@@ -38,4 +41,5 @@ gem 'rack-timeout', '~> 0.6.3'
 gem 'sentry-rails', '~> 5.12'
 gem 'sentry-ruby', '~> 5.12'
 
-gem "flog", "~> 4.8"
+gem 'sidekiq', '~> 7.2'
+gem 'sidekiq-scheduler', '~> 5.0'
