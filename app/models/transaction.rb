@@ -10,7 +10,7 @@ class Transaction < ApplicationRecord
   belongs_to :budget
   belongs_to :collection, optional: true
 
-  before_validation :update_status
+  after_create :update_status
 
   validates :name, presence: true
   validates :price_in_cents, presence: true
@@ -26,9 +26,14 @@ class Transaction < ApplicationRecord
     Time.zone.now >= due_at
   end
 
-  private
+  def self.update_statuses
+    Transaction.find_each(&:update_status!)
+  end
 
-  def update_status
-    self.status = late? ? :overdue : :created if due_at_changed?
+  def update_status!
+    return if paid?
+
+    self.status = late? ? :overdue : :created
+    save
   end
 end
