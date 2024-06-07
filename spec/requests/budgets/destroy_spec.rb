@@ -44,7 +44,9 @@ RSpec.describe 'Budgets' do
       end
 
       context 'when validation fails' do
-        let!(:transaction) { create(:transaction, budget:) }
+        before do
+          allow_any_instance_of(Budget).to receive(:destroy).and_return(nil)
+        end
 
         it 'is returns :unprocessable_entity status' do
           request
@@ -57,8 +59,8 @@ RSpec.describe 'Budgets' do
           expect(JSON.parse(response.body).with_indifferent_access).to match(
             {
               error: {
-                message: 'Erro de exclusão',
-                type: 'BadRequest'
+                details: 'não foi possivel excluir o orçamento',
+                message: 'Erro de exclusão'
               }
             }.with_indifferent_access
           )

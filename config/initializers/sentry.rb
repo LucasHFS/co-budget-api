@@ -1,5 +1,5 @@
 Sentry.init do |config|
-  return if Rails.env.development?
+  return if Rails.env.development? || Rails.env.test?
 
   config.dsn = ENV.fetch('SENTRY_DNS')
 
