@@ -10,7 +10,7 @@ class Transaction < ApplicationRecord
   belongs_to :budget
   belongs_to :collection, optional: true
 
-  after_create :update_status
+  after_create :update_status!
 
   validates :name, presence: true
   validates :price_in_cents, presence: true

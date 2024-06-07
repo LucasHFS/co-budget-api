@@ -43,6 +43,3 @@ gem 'sentry-ruby', '~> 5.12'
 
 gem 'sidekiq', '~> 7.2'
 gem 'sidekiq-scheduler', '~> 5.0'
-
-gem "fakeredis", "~> 0.9.2"
-gem "mock_redis", "~> 0.44.0"
