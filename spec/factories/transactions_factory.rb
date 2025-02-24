@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :transaction do
-    association :budget
+    budget
     name { Faker::Lorem.word }
     price_in_cents { Faker::Number.number(digits: 4) }
     due_at { Faker::Date.between(from: 2.days.from_now, to: 30.days.from_now) }

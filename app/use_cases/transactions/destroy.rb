@@ -15,7 +15,7 @@ module Transactions
                      when 'one'
                        Transaction.where(id: transaction.id)
                      when 'this_and_next'
-                       transaction.collection.transactions.where('due_at >= ?', transaction.due_at)
+                       transaction.collection.transactions.where(due_at: transaction.due_at..)
                      when 'all'
                        transaction.collection.transactions
                      else

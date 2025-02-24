@@ -48,7 +48,7 @@ RSpec.describe 'Transactions' do
           {
             transaction: {
               name: 'transaction b',
-              price: 55.7,
+              price: 55.7
             }
           }
         end
@@ -57,7 +57,6 @@ RSpec.describe 'Transactions' do
           request
           expect(response).to have_http_status(:ok)
         end
-
 
         it 'updates the transaction with the right data' do
           request
@@ -87,7 +86,7 @@ RSpec.describe 'Transactions' do
       it 'returns the error message' do
         request
 
-        expect(JSON.parse(response.body).with_indifferent_access).to match(
+        expect(response.parsed_body.with_indifferent_access).to match(
           {
             error: {
               message: 'Erro de validação',

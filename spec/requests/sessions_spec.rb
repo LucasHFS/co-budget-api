@@ -28,7 +28,7 @@ RSpec.describe 'Sesssions' do
       it 'returns error messages' do
         request
 
-        expect(JSON.parse(response.body)).to match(json_response)
+        expect(response.parsed_body).to match(json_response)
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe 'Sesssions' do
       it 'returns user payload' do
         request
 
-        expect(JSON.parse(response.body)).to match(json_response)
+        expect(response.parsed_body).to match(json_response)
       end
     end
   end

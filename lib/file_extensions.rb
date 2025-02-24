@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 
 class File
   class << self
-    alias_method :exists?, :exist?
+    alias exists? exist?
   end
 end

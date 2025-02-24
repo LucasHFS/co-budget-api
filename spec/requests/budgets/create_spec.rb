@@ -45,7 +45,7 @@ RSpec.describe 'Budgets' do
         it 'creates the budget on the db' do
           request
 
-          expect(JSON.parse(response.body).with_indifferent_access).to match(
+          expect(response.parsed_body.with_indifferent_access).to match(
             {
               budget: {
                 id: Integer,
@@ -73,7 +73,7 @@ RSpec.describe 'Budgets' do
         it 'returns the error message' do
           request
 
-          expect(JSON.parse(response.body).with_indifferent_access).to match(
+          expect(response.parsed_body.with_indifferent_access).to match(
             {
               error: {
                 message: 'Erro de validação',

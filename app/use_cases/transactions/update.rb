@@ -13,7 +13,7 @@ module Transactions
     def call
       transactions = []
       @target_transactions ||= 'one'
-      
+
       case @target_transactions
       when 'one'
         transaction.assign_attributes(attributes)

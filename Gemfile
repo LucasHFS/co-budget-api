@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-git_source(:github) { |_repo| 'https://github.com/#{repo}.git' }
+git_source(:github) { |_repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.3'
 
@@ -20,13 +20,13 @@ group :development, :test do
   gem 'faker', '~> 3.1.0'
   gem 'flog', '~> 4.8'
   gem 'pry', '~> 0.14.2'
+  gem 'rails-erd', '~> 1.7'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'rubocop-performance', '~> 1.14'
   gem 'rubocop-rails', '~> 2.14'
   gem 'rubocop-rspec', '~> 2.11'
   gem 'shoulda-matchers', '~> 5.3'
   gem 'simplecov', '~> 0.22.0'
-  gem 'rails-erd', '~> 1.7'
 end
 
 gem 'devise', '~> 4.9', '>= 4.9.4'

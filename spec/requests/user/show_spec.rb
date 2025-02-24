@@ -39,7 +39,7 @@ RSpec.describe 'Users' do
       it 'return user attributes' do
         request
 
-        expect(JSON.parse(response.body)).to match(json_response)
+        expect(response.parsed_body).to match(json_response)
       end
     end
   end
