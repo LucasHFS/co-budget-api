@@ -29,14 +29,10 @@ RSpec.describe 'Transactions' do
           }
         end
 
-        it 'is returns :ok status' do
+        it 'returns :ok status' do
           request
           expect(response).to have_http_status(:ok)
         end
-
-        # it 'updates the right amount of transactions' do
-        #   expect { request }.to change(Transaction, :count).by(3)
-        # end
 
         it 'updates the transaction with the right data' do
           request
@@ -46,35 +42,6 @@ RSpec.describe 'Transactions' do
           )
         end
       end
-
-      # context 'with this_and_next transactions' do
-      #   let(:params) do
-      #     {
-      #       transaction: {
-      #         name: 'transaction b',
-      #         price: 55.7,
-      #         target_transactions: 'this_and_next'
-      #       }
-      #     }
-      #   end
-
-      #   it 'is returns :ok status' do
-      #     request
-      #     expect(response).to have_http_status(:ok)
-      #   end
-
-      #   # it 'updates the right amount of transactions' do
-      #   #   expect { request }.to change(Transaction, :count).by(3)
-      #   # end
-
-      #   it 'updates the transaction with the right data' do
-      #     request
-
-      #     expect(collection.transactions.pluck(:name, :price_in_cents).uniq).to eq(
-      #       ["transaction b", 5570]
-      #     )
-      #   end
-      # end
 
       context 'with single transaction' do
         let(:params) do
@@ -86,14 +53,11 @@ RSpec.describe 'Transactions' do
           }
         end
 
-        it 'is returns :ok status' do
+        it 'returns :ok status' do
           request
           expect(response).to have_http_status(:ok)
         end
 
-        # it 'updates the right amount of transactions' do
-        #   expect { request }.to change(Transaction, :count).by(1)
-        # end
 
         it 'updates the transaction with the right data' do
           request
@@ -115,7 +79,7 @@ RSpec.describe 'Transactions' do
         }
       end
 
-      it 'is returns :unprocessable_entity status' do
+      it 'returns :unprocessable_entity status' do
         request
         expect(response).to have_http_status(:unprocessable_entity)
       end

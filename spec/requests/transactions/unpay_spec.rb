@@ -18,7 +18,7 @@ RSpec.describe 'Transactions' do
     context 'when transaction is late' do
       let(:transaction) { create(:transaction, :late) }
 
-      it 'is returns :ok status' do
+      it 'returns :ok status' do
         request
         expect(response).to have_http_status(:ok)
       end
@@ -32,7 +32,7 @@ RSpec.describe 'Transactions' do
     context 'when transaction is not late' do
       let(:transaction) { create(:transaction) }
 
-      it 'is returns :ok status' do
+      it 'returns :ok status' do
         request
         expect(response).to have_http_status(:ok)
       end

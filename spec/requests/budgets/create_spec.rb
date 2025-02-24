@@ -37,7 +37,7 @@ RSpec.describe 'Budgets' do
       let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
       context 'when successful' do
-        it 'is returns :created status' do
+        it 'returns :created status' do
           request
           expect(response).to have_http_status(:created)
         end
@@ -65,7 +65,7 @@ RSpec.describe 'Budgets' do
           }
         end
 
-        it 'is returns :unprocessable_entity status' do
+        it 'returns :unprocessable_entity status' do
           request
           expect(response).to have_http_status(:unprocessable_entity)
         end

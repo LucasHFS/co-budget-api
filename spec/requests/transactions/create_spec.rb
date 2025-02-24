@@ -41,7 +41,7 @@ RSpec.describe 'Transactions' do
           }
         end
 
-        it 'is returns :created status' do
+        it 'returns :created status' do
           request
           expect(response).to have_http_status(:created)
         end
@@ -78,7 +78,7 @@ RSpec.describe 'Transactions' do
           }
         end
 
-        it 'is returns :created status' do
+        it 'returns :created status' do
           request
           expect(response).to have_http_status(:created)
         end
@@ -102,7 +102,7 @@ RSpec.describe 'Transactions' do
       end
 
       context 'and creating single transaction' do
-        it 'is returns :created status' do
+        it 'returns :created status' do
           request
           expect(response).to have_http_status(:created)
         end
@@ -135,7 +135,7 @@ RSpec.describe 'Transactions' do
           }
         end
 
-        it 'is returns :unprocessable_entity status' do
+        it 'returns :unprocessable_entity status' do
           request
           expect(response).to have_http_status(:unprocessable_entity)
         end

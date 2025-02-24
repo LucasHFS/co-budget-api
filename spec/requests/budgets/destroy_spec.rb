@@ -31,7 +31,7 @@ RSpec.describe 'Budgets' do
       let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
       context 'when successful' do
-        it 'is returns :no_content status' do
+        it 'returns :no_content status' do
           request
           expect(response).to have_http_status(:no_content)
         end
@@ -48,7 +48,7 @@ RSpec.describe 'Budgets' do
           allow_any_instance_of(Budget).to receive(:destroy).and_return(nil)
         end
 
-        it 'is returns :unprocessable_entity status' do
+        it 'returns :unprocessable_entity status' do
           request
           expect(response).to have_http_status(:unprocessable_entity)
         end
@@ -70,7 +70,7 @@ RSpec.describe 'Budgets' do
       context 'when not found' do
         subject(:request) { delete '/api/budgets/non-existing', params: {}, headers: }
 
-        it 'is returns :unprocessable_entity status' do
+        it 'returns :unprocessable_entity status' do
           request
           expect(response).to have_http_status(:not_found)
         end

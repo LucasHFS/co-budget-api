@@ -31,7 +31,7 @@ RSpec.describe 'Transactions' do
       let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
       context 'when successful' do
-        it 'is returns :no_content status' do
+        it 'returns :no_content status' do
           request
           expect(response).to have_http_status(:no_content)
         end
@@ -46,7 +46,7 @@ RSpec.describe 'Transactions' do
       context 'when not found' do
         subject(:request) { delete '/api/transactions/non-existing', params: {}, headers: }
 
-        it 'is returns :unprocessable_entity status' do
+        it 'returns :unprocessable_entity status' do
           request
           expect(response).to have_http_status(:not_found)
         end

@@ -16,7 +16,7 @@ RSpec.describe 'Transactions' do
     let(:user) { create(:user) }
     let(:transaction) { create(:transaction) }
 
-    it 'is returns :ok status' do
+    it 'returns :ok status' do
       request
       expect(response).to have_http_status(:ok)
     end
