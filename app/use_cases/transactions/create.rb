@@ -44,11 +44,10 @@ module Transactions
     end
 
     def build_transaction_for(collection, index)
-      due_at_date = parse_due_at_date
       Transaction.new(attributes.merge(collection_id: collection.id, due_at: due_at_date + index.months))
     end
 
-    def parse_due_at_date
+    def due_at_date
       Date.parse(attributes[:due_at])
     end
 

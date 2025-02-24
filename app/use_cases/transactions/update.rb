@@ -13,26 +13,19 @@ module Transactions
     def call
       transactions = []
       @target_transactions ||= 'one'
+      
       case @target_transactions
       when 'one'
         transaction.assign_attributes(attributes)
-      # when 'this_and_next'
-      #   transactions = transaction.collection.transactions.where('due_at >= ?', transaction.due_at).each do |transaction|
-      #     transaction.assign_attributes(attributes)
-      #     transaction.updated_at = Time.current
-      #   end
+        success = transaction.save
       when 'all'
         transactions = transaction.collection.transactions.each do |transaction|
           transaction.assign_attributes(attributes)
           transaction.updated_at = Time.current
         end
-      end
 
-      if transactions.any?
         res = Transaction.import(transactions, on_duplicate_key_update: %i[name price_in_cents status])
         success = res.failed_instances.blank?
-      else
-        success = transaction.save
       end
 
       if success
